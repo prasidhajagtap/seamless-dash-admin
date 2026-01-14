@@ -1,0 +1,92 @@
+/* ===================== seamless-dash-admin / admin.css ===================== */
+:root {
+  --red:#A01018;
+  --gold:#FFC107;
+  --blue:#0984e3;
+}
+
+body {
+  margin:0;
+  font-family: "Segoe UI", sans-serif;
+  background:#f5f7fb;
+  color:#333;
+}
+
+.hidden { display:none; }
+
+.card {
+  max-width:380px;
+  margin:80px auto;
+  background:#fff;
+  padding:30px;
+  border-radius:24px;
+  box-shadow:0 20px 40px rgba(0,0,0,0.15);
+  border-top:8px solid var(--red);
+}
+
+h1 {
+  margin-top:0;
+  color:var(--red);
+  text-align:center;
+}
+
+input {
+  width:100%;
+  padding:14px;
+  margin-bottom:12px;
+  border-radius:12px;
+  border:2px solid #eee;
+  font-size:15px;
+}
+
+button {
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:50px;
+  font-weight:800;
+  background:linear-gradient(135deg,var(--gold),var(--red));
+  color:white;
+  cursor:pointer;
+}
+
+header {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:20px;
+}
+
+.actions button {
+  width:auto;
+  margin-left:8px;
+  padding:10px 16px;
+  font-size:13px;
+}
+
+table {
+  width:100%;
+  border-collapse:collapse;
+}
+
+th, td {
+  padding:12px;
+  border-bottom:1px solid #eee;
+  text-align:left;
+}
+
+th {
+  background:#fafafa;
+  color:var(--red);
+}
+
+.badge {
+  padding:4px 10px;
+  border-radius:20px;
+  font-size:12px;
+  font-weight:700;
+}
+
+.badge.yes { background:#ffe6e6; color:var(--red); }
+.badge.no { background:#e6fff2; color:#0a8a43; }
+admin.css
