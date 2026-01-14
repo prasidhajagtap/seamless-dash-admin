@@ -1,6 +1,6 @@
-// ===================== seamless-dash-admin / admin.js =====================
+// ================= Seamless Dash Admin =================
 
-// 🔥 Firebase config (same project as game)
+// Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyBJcK4zEK2Rb-Er8O7iDNYsGW2HUJANPBc",
   authDomain: "seamless-dash.firebaseapp.com",
@@ -8,17 +8,20 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
+
 const auth = firebase.auth();
 const db = firebase.firestore();
 
 let AES_KEY = null;
 let refreshTimer = null;
 
-// ---------- AES-GCM DECRYPT ----------
-async function decrypt(encData, encIv) {
+// ---------- AES DECRYPT ----------
+async function decryptPID(encData, encIv) {
   const keyData = new TextEncoder().encode(AES_KEY);
   const hash = await crypto.subtle.digest("SHA-256", keyData);
-  const key = await crypto.subtle.importKey("raw", hash, { name:"AES-GCM" }, false, ["decrypt"]);
+  const key = await crypto.subtle.importKey(
+    "raw", hash, { name:"AES-GCM" }, false, ["decrypt"]
+  );
 
   const iv = Uint8Array.from(atob(encIv), c=>c.charCodeAt(0));
   const data = Uint8Array.from(atob(encData), c=>c.charCodeAt(0));
@@ -27,8 +30,8 @@ async function decrypt(encData, encIv) {
   return new TextDecoder().decode(plain);
 }
 
-// ---------- AUTH ----------
-document.getElementById("btn-login").onclick = async () => {
+// ---------- LOGIN ----------
+document.getElementById("btn-login").onclick = async function () {
   try {
     await auth.signInWithEmailAndPassword(
       email.value,
@@ -36,23 +39,25 @@ document.getElementById("btn-login").onclick = async () => {
     );
     document.getElementById("auth-screen").classList.add("hidden");
     document.getElementById("key-screen").classList.remove("hidden");
-  } catch(e) {
-  document.getElementById("auth-error").textContent = e.message;
-
+  } catch (e) {
+    document.getElementById("auth-error").textContent = e.message;
   }
 };
 
-document.getElementById("btn-key").onclick = () => {
-  AES_KEY = document.getElementById("aes-key").value;
-  if(!AES_KEY) return;
+// ---------- KEY ----------
+document.getElementById("btn-key").onclick = function () {
+  AES_KEY = document.getElementById("aes-key").value.trim();
+  if (!AES_KEY) return;
 
   document.getElementById("key-screen").classList.add("hidden");
   document.getElementById("dashboard").classList.remove("hidden");
+
   loadPlayers();
-  refreshTimer = setInterval(loadPlayers, 10 * 60 * 1000); // 10 min
+  refreshTimer = setInterval(loadPlayers, 10 * 60 * 1000);
 };
 
-document.getElementById("btn-logout").onclick = async () => {
+// ---------- LOGOUT ----------
+document.getElementById("btn-logout").onclick = async function () {
   clearInterval(refreshTimer);
   AES_KEY = null;
   await auth.signOut();
@@ -66,12 +71,12 @@ async function loadPlayers() {
 
   const snap = await db.collection("players").get();
 
-  for(const doc of snap.docs) {
+  for (const doc of snap.docs) {
     const p = doc.data();
     let pid = "❌";
 
     try {
-      pid = await decrypt(p.pid_enc, p.pid_iv);
+      pid = await decryptPID(p.pid_enc, p.pid_iv);
     } catch {}
 
     const tr = document.createElement("tr");
@@ -81,9 +86,11 @@ async function loadPlayers() {
       <td>${p.highScore}</td>
       <td>${new Date(p.lastSeen).toLocaleString()}</td>
       <td><span class="badge ${p.banned?"yes":"no"}">${p.banned?"YES":"NO"}</span></td>
-      <td><button data-id="${doc.id}">${p.banned?"Unban":"Ban"}</button></td>
+      <td><button>Toggle</button></td>
     `;
-    tr.querySelector("button").onclick = () => toggleBan(doc.id, p.banned);
+    tr.querySelector("button").onclick = function () {
+      toggleBan(doc.id, p.banned);
+    };
     tbody.appendChild(tr);
   }
 }
@@ -95,17 +102,18 @@ async function toggleBan(id, banned) {
 }
 
 // ---------- EXPORT ----------
-function exportCSV() {
+document.getElementById("btn-export-csv").onclick = function () {
   let rows = [["Name","Poornata ID","High Score","Last Seen","Banned"]];
   document.querySelectorAll("#player-table tr").forEach(tr=>{
     rows.push([...tr.children].map(td=>td.innerText));
   });
   download(rows.map(r=>r.join(",")).join("\n"), "seamless-dash.csv");
-}
+};
 
-function exportXLS() {
-  exportCSV(); // Excel opens CSV cleanly
-}
+document.getElementById("btn-export-xls").onclick =
+  document.getElementById("btn-export-csv").onclick;
+
+document.getElementById("btn-refresh").onclick = loadPlayers;
 
 function download(data, name) {
   const a = document.createElement("a");
@@ -113,10 +121,6 @@ function download(data, name) {
   a.download = name;
   a.click();
 }
-
-btn-export-csv.onclick = exportCSV;
-btn-export-xls.onclick = exportXLS;
-btn-refresh.onclick = loadPlayers;
 
 // 🔏 Author watermark
 Object.defineProperty(window,"__SD_ADMIN_AUTHOR__",{
