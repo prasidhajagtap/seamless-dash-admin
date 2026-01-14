@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Seamless Dash – Admin</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, Arial, sans-serif;
+      background: #f4f6fb;
+    }
+    .box {
+      max-width: 420px;
+      margin: 80px auto;
+      background: #fff;
+      padding: 25px;
+      border-radius: 14px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+    }
+    h2 {
+      margin-top: 0;
+      color: #A01018;
+      text-align: center;
+    }
+    input, button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      font-size: 15px;
+    }
+    button {
+      background: #A01018;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: 700;
+    }
+    button:hover { opacity: 0.9; }
+    #panel { display: none; }
+    .error { color: red; margin-top: 10px; font-size: 13px; }
+  </style>
+</head>
+
+<body>
+
+<div class="box" id="loginBox">
+  <h2>Admin Login</h2>
+  <input id="email" placeholder="Admin Email">
+  <input id="password" type="password" placeholder="Password">
+  <button id="loginBtn">Login</button>
+  <div id="loginError" class="error"></div>
+</div>
+
+<div class="box" id="panel">
+  <h2>Seamless Dash – Admin Panel</h2>
+  <button id="logoutBtn">Logout</button>
+  <div id="players"></div>
+</div>
+
+<script>
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "seamless-dash.firebaseapp.com",
+  projectId: "seamless-dash",
+  storageBucket: "seamless-dash.firebasestorage.app",
+  messagingSenderId: "463956345017",
+  appId: "1:463956345017:web:ea6a02cee0ec820ed41b68"
+};
+
+firebase.initializeApp(firebaseConfig);
+
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+</script>
+
+</body>
+</html>
