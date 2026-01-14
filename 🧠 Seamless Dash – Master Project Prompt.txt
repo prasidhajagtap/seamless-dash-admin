@@ -1,0 +1,220 @@
+🧠 Seamless Dash – Master Project Summary (Handoff Prompt)
+📌 Project Overview
+
+Seamless Dash is a browser-based casual game hosted on GitHub Pages, with a zero-cost backend using Firebase.
+The project consists of two separate apps:
+
+Player Game App (seamless-dash)
+
+Secure Admin Panel (seamless-dash-admin)
+
+The goal is to monitor game pulse, player identity, and scores securely, while keeping the game client lightweight and public.
+
+✅ What Is WORKING Now (Current State)
+🎮 Game (Player App)
+
+Hosted on GitHub Pages
+
+Fully playable (no gameplay regression)
+
+Login screen collects:
+
+Player Name
+
+Poornata ID (employee ID)
+
+Input validation works correctly on:
+
+Desktop browsers
+
+Mobile browsers
+
+WebView / embedded environments
+
+On first login:
+
+Name + Poornata ID are saved in localStorage
+
+Poornata ID is:
+
+Hashed (SHA-256 + salt) → used as Firestore document ID
+
+Encrypted (AES-GCM) → stored securely for admin decryption
+
+Firebase write is non-blocking (game continues even if Firebase fails)
+
+📤 Data sent to Firebase (players collection):
+
+name
+
+pid_enc → AES-encrypted Poornata ID
+
+pid_iv → AES IV
+
+pid_fp → short fingerprint for sanity/debug
+
+highScore (currently static / initial)
+
+createdAt
+
+lastSeen
+
+banned (default false)
+
+🔐 Security Model (Important)
+
+Poornata ID is NEVER stored in plain text
+
+Game client:
+
+Uses encryption + hashing
+
+Has no read access to Firebase
+
+Firebase rules:
+
+Allow unauthenticated writes (required for GitHub Pages)
+
+Disallow all public reads
+
+Admin reads require Firebase Auth
+
+🧑‍💼 Admin Panel (seamless-dash-admin)
+
+Hosted on GitHub Pages
+
+Separate repo from the game
+
+Uses Firebase Auth (email/password) for admin login
+
+Requires manual AES key entry (same key as game) to decrypt IDs
+
+After login + key:
+
+Loads all players from Firestore
+
+Decrypts Poornata IDs client-side
+
+Displays data in a responsive table
+
+📊 Admin Panel Features Working
+
+Secure login
+
+AES key gate
+
+View:
+
+Player Name
+
+Actual Poornata ID (decrypted)
+
+High Score (current value)
+
+Last Seen timestamp
+
+Banned status
+
+Actions:
+
+Ban / Unban player
+
+Export CSV
+
+Export Excel
+
+UI:
+
+Fully responsive (mobile + desktop)
+
+Styled to match game branding
+
+Auto refresh (configurable) + manual refresh button
+
+❌ What Is NOT Yet Integrated (Explicitly Pending)
+🎯 Gameplay → Backend Integration (Pending)
+
+Live gameplay metrics are NOT yet wired
+
+Currently missing:
+
+Real-time score updates
+
+Session tracking
+
+Level progression stats
+
+Shield usage
+
+Rage quits
+
+Device / geo / analytics metrics
+
+👉 Right now, Firebase only knows:
+
+Who logged in
+
+What their encrypted Poornata ID is
+
+A placeholder / initial high score
+
+🧩 Architectural Decisions (Why Things Are Done This Way)
+
+GitHub Pages → requires unauthenticated writes
+
+Firestore → cheap, scalable, zero-cost at low usage
+
+AES encryption (not hashing) → future-proof for:
+
+ADFS handshake
+
+Corporate SSO integration
+
+Separate Admin App → prevents exposure of decryption logic
+
+Client-side encryption → no backend server required
+
+🔑 Key Material (Critical)
+
+AES key:
+
+Hardcoded (obfuscated) in game client
+
+Manually entered in admin panel
+
+Same key required for decryption
+
+No AES key stored in Firebase
+
+🚀 Next Logical Steps (Future Work)
+
+These are intentionally not done yet:
+
+Push gameplay events to Firestore (sessions collection)
+
+Update high score after each game
+
+Add analytics aggregation for:
+
+DAU
+
+Session length
+
+Level distribution
+
+Rage quits
+
+Admin charts / dashboards
+
+Optional:
+
+Key rotation
+
+ADFS / SSO bridge
+
+Cloud Functions (if backend allowed later)
+
+🧾 One-Line Status Summary
+
+“Seamless Dash currently has secure identity capture and admin visibility fully working, with encrypted Poornata ID flow end-to-end. Gameplay analytics and score syncing are the next integration phase.”
+
