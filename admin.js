@@ -37,7 +37,8 @@ document.getElementById("btn-login").onclick = async () => {
     document.getElementById("auth-screen").classList.add("hidden");
     document.getElementById("key-screen").classList.remove("hidden");
   } catch(e) {
-    auth-error.textContent = e.message;
+  document.getElementById("auth-error").textContent = e.message;
+
   }
 };
 
