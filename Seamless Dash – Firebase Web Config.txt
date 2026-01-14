@@ -1,0 +1,20 @@
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyBJcK4zEK2Rb-Er8O7iDNYsGW2HUJANPBc",
+  authDomain: "seamless-dash.firebaseapp.com",
+  projectId: "seamless-dash",
+  storageBucket: "seamless-dash.firebasestorage.app",
+  messagingSenderId: "463956345017",
+  appId: "1:463956345017:web:ea6a02cee0ec820ed41b68"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+
+
+SD_PRASIDHA_JAGTAP_V38_MASTER_KEY
